@@ -7,6 +7,8 @@ const PIECE_VALUE: Record<string, number> = {
   pyramid: 10, anubis: 15, scarab: 20, king: 0, sphinx: 0,
 };
 
+const MAX_MOVES_PER_LEVEL = 60;
+
 function getAllLegalMoves(state: GameState): MoveAction[] {
   const moves: MoveAction[] = [];
   for (const piece of state.board.pieces) {
@@ -38,7 +40,6 @@ function evaluate(state: GameState, aiPlayer: Player): number {
     }
   }
 
-  // Laser threat: check if either king is in a laser path
   const aiLaser = calculateLaser(state.board, aiPlayer);
   const oppLaser = calculateLaser(state.board, opponent);
 
@@ -49,7 +50,6 @@ function evaluate(state: GameState, aiPlayer: Player): number {
     score += 5000;
   }
 
-  // King protection: count friendly pieces adjacent to own king
   if (aiKing) {
     let guards = 0;
     for (const p of state.board.pieces) {
@@ -64,18 +64,15 @@ function evaluate(state: GameState, aiPlayer: Player): number {
   return score;
 }
 
-function orderMoves(state: GameState, moves: MoveAction[]): MoveAction[] {
-  const scored = moves.map(m => {
-    const result = executeMove(state, m);
-    let priority = 0;
-    if (result) {
-      if (result.state.status !== 'playing') priority = 1000;
-      else if (result.destroyedPieces.length > 0) priority = 100;
-    }
-    return { m, priority };
-  });
-  scored.sort((a, b) => b.priority - a.priority);
-  return scored.map(s => s.m);
+function quickScore(state: GameState, move: MoveAction): number {
+  const result = executeMove(state, move);
+  if (!result) return -Infinity;
+  const aiPlayer = state.currentPlayer;
+  const winStatus = aiPlayer === 'red' ? 'red_wins' : 'blue_wins';
+  if (result.state.status === winStatus) return 10000;
+  if (result.state.status !== 'playing') return -10000;
+  if (result.destroyedPieces.length > 0) return 100;
+  return 0;
 }
 
 function minimax(
@@ -85,22 +82,27 @@ function minimax(
   beta: number,
   isMaximizing: boolean,
   aiPlayer: Player,
+  deadline: number,
 ): number {
-  if (depth === 0 || state.status !== 'playing') {
+  if (depth === 0 || state.status !== 'playing' || performance.now() > deadline) {
     return evaluate(state, aiPlayer);
   }
 
-  const moves = getAllLegalMoves(state);
+  let moves = getAllLegalMoves(state);
   if (moves.length === 0) return evaluate(state, aiPlayer);
+
+  if (moves.length > MAX_MOVES_PER_LEVEL) {
+    moves = moves.slice(0, MAX_MOVES_PER_LEVEL);
+  }
 
   if (isMaximizing) {
     let maxEval = -Infinity;
     for (const move of moves) {
       const result = executeMove(state, move);
       if (!result) continue;
-      const eval_ = minimax(result.state, depth - 1, alpha, beta, false, aiPlayer);
-      maxEval = Math.max(maxEval, eval_);
-      alpha = Math.max(alpha, eval_);
+      const val = minimax(result.state, depth - 1, alpha, beta, false, aiPlayer, deadline);
+      maxEval = Math.max(maxEval, val);
+      alpha = Math.max(alpha, val);
       if (beta <= alpha) break;
     }
     return maxEval;
@@ -109,9 +111,9 @@ function minimax(
     for (const move of moves) {
       const result = executeMove(state, move);
       if (!result) continue;
-      const eval_ = minimax(result.state, depth - 1, alpha, beta, true, aiPlayer);
-      minEval = Math.min(minEval, eval_);
-      beta = Math.min(beta, eval_);
+      const val = minimax(result.state, depth - 1, alpha, beta, true, aiPlayer, deadline);
+      minEval = Math.min(minEval, val);
+      beta = Math.min(beta, val);
       if (beta <= alpha) break;
     }
     return minEval;
@@ -123,22 +125,27 @@ export function findBestMove(state: GameState, depth: number): MoveAction | null
   if (moves.length === 0) return null;
 
   const aiPlayer = state.currentPlayer;
-  const ordered = depth >= 2 ? orderMoves(state, moves) : moves;
+  const deadline = performance.now() + (depth >= 3 ? 3000 : depth >= 2 ? 2000 : 500);
+
+  // Quick-score to order moves (captures/wins first)
+  const scored = moves.map(m => ({ m, qs: quickScore(state, m) }));
+  scored.sort((a, b) => b.qs - a.qs);
+
+  // Immediate win check
+  if (scored[0].qs >= 10000) return scored[0].m;
+
+  const ordered = scored.map(s => s.m).slice(0, MAX_MOVES_PER_LEVEL);
 
   let bestMove: MoveAction = ordered[0];
   let bestScore = -Infinity;
 
   for (const move of ordered) {
+    if (performance.now() > deadline) break;
+
     const result = executeMove(state, move);
     if (!result) continue;
 
-    // Immediate win
-    if (result.state.status !== 'playing') {
-      const winStatus = aiPlayer === 'red' ? 'red_wins' : 'blue_wins';
-      if (result.state.status === winStatus) return move;
-    }
-
-    const score = minimax(result.state, depth - 1, -Infinity, Infinity, false, aiPlayer);
+    const score = minimax(result.state, depth - 1, -Infinity, Infinity, false, aiPlayer, deadline);
 
     if (score > bestScore) {
       bestScore = score;
@@ -146,17 +153,11 @@ export function findBestMove(state: GameState, depth: number): MoveAction | null
     }
   }
 
-  // Easy mode: add some randomness — pick randomly from top 3
+  // Easy mode: randomize among top moves
   if (depth === 1) {
-    const scored = ordered.slice(0, 20).map(m => {
-      const result = executeMove(state, m);
-      if (!result) return { m, score: -Infinity };
-      return { m, score: evaluate(result.state, aiPlayer) };
-    });
-    scored.sort((a, b) => b.score - a.score);
-    const topN = scored.slice(0, 3).filter(s => s.score > -Infinity);
-    if (topN.length > 0) {
-      return topN[Math.floor(Math.random() * topN.length)].m;
+    const topMoves = scored.slice(0, 5).filter(s => s.qs > -Infinity);
+    if (topMoves.length > 0) {
+      return topMoves[Math.floor(Math.random() * topMoves.length)].m;
     }
   }
 
