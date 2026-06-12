@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 280" width="560" height="280">
+  <defs>
+    <linearGradient id="redGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#e94560"/>
+      <stop offset="100%" style="stop-color:#c81d4e"/>
+    </linearGradient>
+    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00d4ff"/>
+      <stop offset="100%" style="stop-color:#0984e3"/>
+    </linearGradient>
+    <linearGradient id="mirrorGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff"/>
+      <stop offset="50%" style="stop-color:#c0e0ff"/>
+      <stop offset="100%" style="stop-color:#ffffff"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="mirrorShine">
+      <feGaussianBlur stdDeviation="1" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <rect width="560" height="280" rx="8" fill="#1a1a2e"/>
+
+  <text x="280" y="22" text-anchor="middle" fill="#aaa" font-family="Arial,sans-serif" font-size="14" font-weight="bold">PYRAMID (Mirror) - 4 Orientations - Reflects laser 90 degrees</text>
+
+  <!-- Orientation 1: Mirror at SE corner (◢) - reflects E→N and S→W -->
+  <g transform="translate(20, 45)">
+    <rect x="0" y="0" width="110" height="110" rx="8" fill="#2a1a2e" stroke="#444" stroke-width="1"/>
+    <rect x="10" y="10" width="90" height="90" rx="6" fill="url(#redGrad)" filter="url(#glow)"/>
+    <!-- Triangle showing mirror orientation -->
+    <polygon points="20,20 90,90 20,90" fill="#c81d4e" opacity="0.6"/>
+    <!-- Mirror surface - diagonal line SE -->
+    <line x1="20" y1="20" x2="90" y2="90" stroke="url(#mirrorGrad)" stroke-width="4" filter="url(#mirrorShine)"/>
+    <!-- Arrow showing reflection: East → North -->
+    <text x="96" y="58" fill="#ffe66d" font-family="Arial,sans-serif" font-size="12">→</text>
+    <text x="52" y="18" fill="#ffe66d" font-family="Arial,sans-serif" font-size="12">↑</text>
+    <!-- Mirror icon -->
+    <text x="55" y="70" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-size="22" opacity="0.8">◢</text>
+    <text x="55" y="130" text-anchor="middle" fill="#aaa" font-family="Arial,sans-serif" font-size="10">◢ SE corner</text>
+    <text x="55" y="143" text-anchor="middle" fill="#666" font-family="Arial,sans-serif" font-size="9">E→N, S→W</text>
+  </g>
+
+  <!-- Orientation 2: Mirror at SW corner (◣) - reflects W→N and S→E -->
+  <g transform="translate(150, 45)">
+    <rect x="0" y="0" width="110" height="110" rx="8" fill="#2a1a2e" stroke="#444" stroke-width="1"/>
+    <rect x="10" y="10" width="90" height="90" rx="6" fill="url(#redGrad)" filter="url(#glow)"/>
+    <polygon points="90,20 20,90 90,90" fill="#c81d4e" opacity="0.6"/>
+    <line x1="90" y1="20" x2="20" y2="90" stroke="url(#mirrorGrad)" stroke-width="4" filter="url(#mirrorShine)"/>
+    <text x="6" y="58" fill="#ffe66d" font-family="Arial,sans-serif" font-size="12">←</text>
+    <text x="52" y="18" fill="#ffe66d" font-family="Arial,sans-serif" font-size="12">↑</text>
+    <text x="55" y="70" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-size="22" opacity="0.8">◣</text>
+    <text x="55" y="130" text-anchor="middle" fill="#aaa" font-family="Arial,sans-serif" font-size="10">◣ SW corner</text>
+    <text x="55" y="143" text-anchor="middle" fill="#666" font-family="Arial,sans-serif" font-size="9">W→N, S→E</text>
+  </g>
+
+  <!-- Orientation 3: Mirror at NE corner (◥) - reflects E→S and N→W -->
+  <g transform="translate(280, 45)">
+    <rect x="0" y="0" width="110" height="110" rx="8" fill="#1a2a3e" stroke="#444" stroke-width="1"/>
+    <rect x="10" y="10" width="90" height="90" rx="6" fill="url(#blueGrad)" filter="url(#glow)"/>
+    <polygon points="20,20 90,20 20,90" fill="#0974d3" opacity="0.6"/>
+    <line x1="90" y1="20" x2="20" y2="90" stroke="url(#mirrorGrad)" stroke-width="4" filter="url(#mirrorShine)"/>
+    <text x="96" y="58" fill="#ffe66d" font-family="Arial,sans-serif" font-size="12">→</text>
+    <text x="52" y="105" fill="#ffe66d" font-family="Arial,sans-serif" font-size="12">↓</text>
+    <text x="55" y="60" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-size="22" opacity="0.8">◥</text>
+    <text x="55" y="130" text-anchor="middle" fill="#aaa" font-family="Arial,sans-serif" font-size="10">◥ NE corner</text>
+    <text x="55" y="143" text-anchor="middle" fill="#666" font-family="Arial,sans-serif" font-size="9">E→S, N→W</text>
+  </g>
+
+  <!-- Orientation 4: Mirror at NW corner (◤) - reflects W→S and N→E -->
+  <g transform="translate(410, 45)">
+    <rect x="0" y="0" width="110" height="110" rx="8" fill="#1a2a3e" stroke="#444" stroke-width="1"/>
+    <rect x="10" y="10" width="90" height="90" rx="6" fill="url(#blueGrad)" filter="url(#glow)"/>
+    <polygon points="20,20 90,20 90,90" fill="#0974d3" opacity="0.6"/>
+    <line x1="20" y1="20" x2="90" y2="90" stroke="url(#mirrorGrad)" stroke-width="4" filter="url(#mirrorShine)"/>
+    <text x="6" y="58" fill="#ffe66d" font-family="Arial,sans-serif" font-size="12">←</text>
+    <text x="52" y="105" fill="#ffe66d" font-family="Arial,sans-serif" font-size="12">↓</text>
+    <text x="55" y="60" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-size="22" opacity="0.8">◤</text>
+    <text x="55" y="130" text-anchor="middle" fill="#aaa" font-family="Arial,sans-serif" font-size="10">◤ NW corner</text>
+    <text x="55" y="143" text-anchor="middle" fill="#666" font-family="Arial,sans-serif" font-size="9">W→S, N→E</text>
+  </g>
+
+  <!-- Legend -->
+  <line x1="40" y1="210" x2="70" y2="210" stroke="url(#mirrorGrad)" stroke-width="4"/>
+  <text x="80" y="214" fill="#aaa" font-family="Arial,sans-serif" font-size="11">= Mirror surface (reflects laser)</text>
+
+  <rect x="40" y="225" width="30" height="15" fill="#e94560" opacity="0.5" rx="2"/>
+  <text x="80" y="237" fill="#aaa" font-family="Arial,sans-serif" font-size="11">= Non-mirror side (DESTROYED if hit by laser)</text>
+
+  <text x="280" y="270" text-anchor="middle" fill="#666" font-family="Arial,sans-serif" font-size="11">7 per player. Can move 1 cell in any direction. Can rotate 90 degrees.</text>
+</svg>

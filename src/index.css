@@ -1,0 +1,25 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #1a1a2e;
+  overflow: hidden;
+}
+
+#root {
+  width: 100%;
+  max-width: 100%;
+}
+
+button:hover:not(:disabled) {
+  opacity: 0.85;
+  transform: scale(1.02);
+}
+
+button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

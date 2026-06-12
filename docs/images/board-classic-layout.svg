@@ -1,0 +1,247 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 620" width="700" height="620">
+  <defs>
+    <linearGradient id="redGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#e94560"/>
+      <stop offset="100%" style="stop-color:#c81d4e"/>
+    </linearGradient>
+    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00d4ff"/>
+      <stop offset="100%" style="stop-color:#0984e3"/>
+    </linearGradient>
+    <linearGradient id="mirrorGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff"/>
+      <stop offset="50%" style="stop-color:#c0e0ff"/>
+      <stop offset="100%" style="stop-color:#ffffff"/>
+    </linearGradient>
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#888"/>
+      <stop offset="50%" style="stop-color:#ddd"/>
+      <stop offset="100%" style="stop-color:#888"/>
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffd700"/>
+      <stop offset="100%" style="stop-color:#daa520"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="1.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <rect width="700" height="620" rx="8" fill="#1a1a2e"/>
+
+  <text x="350" y="28" text-anchor="middle" fill="#ddd" font-family="Arial,sans-serif" font-size="18" font-weight="bold">Classic Board Layout (10 x 8)</text>
+  <text x="350" y="46" text-anchor="middle" fill="#888" font-family="Arial,sans-serif" font-size="12">Rotationally symmetric (180 degrees) - Based on Khet Classic</text>
+
+  <!-- Board -->
+  <g transform="translate(60, 60)">
+    <!-- Board background -->
+    <rect x="0" y="0" width="580" height="464" rx="6" fill="#0a2040" stroke="#1a4a7a" stroke-width="2"/>
+
+    <!-- Color-restricted zones -->
+    <!-- Blue zone: top-left corner area -->
+    <rect x="1" y="1" width="57" height="57" fill="#0984e3" opacity="0.1"/>
+    <rect x="1" y="59" width="57" height="57" fill="#0984e3" opacity="0.06"/>
+    <!-- Red zone: bottom-right corner area -->
+    <rect x="523" y="407" width="56" height="56" fill="#e94560" opacity="0.1"/>
+    <rect x="523" y="349" width="56" height="56" fill="#e94560" opacity="0.06"/>
+
+    <!-- Grid lines -->
+    <!-- Vertical lines -->
+    <line x1="58" y1="0" x2="58" y2="464" stroke="#1a4a7a" stroke-width="1"/>
+    <line x1="116" y1="0" x2="116" y2="464" stroke="#1a4a7a" stroke-width="1"/>
+    <line x1="174" y1="0" x2="174" y2="464" stroke="#1a4a7a" stroke-width="1"/>
+    <line x1="232" y1="0" x2="232" y2="464" stroke="#1a4a7a" stroke-width="1"/>
+    <line x1="290" y1="0" x2="290" y2="464" stroke="#1a4a7a" stroke-width="1"/>
+    <line x1="348" y1="0" x2="348" y2="464" stroke="#1a4a7a" stroke-width="1"/>
+    <line x1="406" y1="0" x2="406" y2="464" stroke="#1a4a7a" stroke-width="1"/>
+    <line x1="464" y1="0" x2="464" y2="464" stroke="#1a4a7a" stroke-width="1"/>
+    <line x1="522" y1="0" x2="522" y2="464" stroke="#1a4a7a" stroke-width="1"/>
+    <!-- Horizontal lines -->
+    <line x1="0" y1="58" x2="580" y2="58" stroke="#1a4a7a" stroke-width="1"/>
+    <line x1="0" y1="116" x2="580" y2="116" stroke="#1a4a7a" stroke-width="1"/>
+    <line x1="0" y1="174" x2="580" y2="174" stroke="#1a4a7a" stroke-width="1"/>
+    <line x1="0" y1="232" x2="580" y2="232" stroke="#1a4a7a" stroke-width="1"/>
+    <line x1="0" y1="290" x2="580" y2="290" stroke="#1a4a7a" stroke-width="1"/>
+    <line x1="0" y1="348" x2="580" y2="348" stroke="#1a4a7a" stroke-width="1"/>
+    <line x1="0" y1="406" x2="580" y2="406" stroke="#1a4a7a" stroke-width="1"/>
+
+    <!-- Column labels (0-9) -->
+    <text x="29" y="482" text-anchor="middle" fill="#666" font-family="monospace" font-size="12">0</text>
+    <text x="87" y="482" text-anchor="middle" fill="#666" font-family="monospace" font-size="12">1</text>
+    <text x="145" y="482" text-anchor="middle" fill="#666" font-family="monospace" font-size="12">2</text>
+    <text x="203" y="482" text-anchor="middle" fill="#666" font-family="monospace" font-size="12">3</text>
+    <text x="261" y="482" text-anchor="middle" fill="#666" font-family="monospace" font-size="12">4</text>
+    <text x="319" y="482" text-anchor="middle" fill="#666" font-family="monospace" font-size="12">5</text>
+    <text x="377" y="482" text-anchor="middle" fill="#666" font-family="monospace" font-size="12">6</text>
+    <text x="435" y="482" text-anchor="middle" fill="#666" font-family="monospace" font-size="12">7</text>
+    <text x="493" y="482" text-anchor="middle" fill="#666" font-family="monospace" font-size="12">8</text>
+    <text x="551" y="482" text-anchor="middle" fill="#666" font-family="monospace" font-size="12">9</text>
+
+    <!-- Row labels (0-7, bottom to top) -->
+    <text x="-12" y="436" text-anchor="middle" fill="#666" font-family="monospace" font-size="12">0</text>
+    <text x="-12" y="378" text-anchor="middle" fill="#666" font-family="monospace" font-size="12">1</text>
+    <text x="-12" y="320" text-anchor="middle" fill="#666" font-family="monospace" font-size="12">2</text>
+    <text x="-12" y="262" text-anchor="middle" fill="#666" font-family="monospace" font-size="12">3</text>
+    <text x="-12" y="204" text-anchor="middle" fill="#666" font-family="monospace" font-size="12">4</text>
+    <text x="-12" y="146" text-anchor="middle" fill="#666" font-family="monospace" font-size="12">5</text>
+    <text x="-12" y="88" text-anchor="middle" fill="#666" font-family="monospace" font-size="12">6</text>
+    <text x="-12" y="30" text-anchor="middle" fill="#666" font-family="monospace" font-size="12">7</text>
+
+    <!-- ========== ROW 7 (top, y=0): Blue Sphinx, Blue Anubis, Blue Pyramids ========== -->
+    <!-- Blue Sphinx at (0,7) - faces down-right → -->
+    <rect x="4" y="4" width="50" height="50" rx="4" fill="url(#blueGrad)" filter="url(#glow)"/>
+    <polygon points="18,15 40,29 18,43" fill="#1a1a2e"/>
+    <polygon points="20,18 36,29 20,40" fill="#ffe66d" opacity="0.8"/>
+    <text x="29" y="55" text-anchor="middle" fill="#00d4ff" font-family="Arial,sans-serif" font-size="7">SPH→</text>
+
+    <!-- Blue Anubis at (4,7) - shield facing south -->
+    <rect x="236" y="4" width="50" height="50" rx="4" fill="url(#blueGrad)" filter="url(#glow)"/>
+    <rect x="238" y="44" width="46" height="8" rx="2" fill="url(#shieldGrad)" opacity="0.9"/>
+    <text x="261" y="35" text-anchor="middle" fill="#1a1a2e" font-family="Arial,sans-serif" font-size="18" font-weight="bold">A</text>
+
+    <!-- Blue King at (5,7) -->
+    <rect x="294" y="4" width="50" height="50" rx="4" fill="url(#blueGrad)" filter="url(#glow)"/>
+    <polygon points="308,38 312,22 317,32 319,16 321,32 326,22 330,38" fill="#ffe66d" stroke="#1a1a2e" stroke-width="0.5"/>
+    <rect x="308" y="38" width="22" height="4" rx="1" fill="#ffe66d"/>
+    <text x="319" y="55" text-anchor="middle" fill="#00d4ff" font-family="Arial,sans-serif" font-size="7">KING</text>
+
+    <!-- Blue Pyramid at (6,7) ◣ orientation -->
+    <rect x="352" y="4" width="50" height="50" rx="4" fill="url(#blueGrad)" filter="url(#glow)"/>
+    <polygon points="396,10 358,46 396,46" fill="#0974d3" opacity="0.5"/>
+    <line x1="396" y1="10" x2="358" y2="46" stroke="url(#mirrorGrad)" stroke-width="2"/>
+    <text x="377" y="55" text-anchor="middle" fill="#00d4ff" font-family="Arial,sans-serif" font-size="7">PY ◣</text>
+
+    <!-- Blue Pyramid at (7,7) ◣ orientation -->
+    <rect x="410" y="4" width="50" height="50" rx="4" fill="url(#blueGrad)" filter="url(#glow)"/>
+    <polygon points="454,10 416,46 454,46" fill="#0974d3" opacity="0.5"/>
+    <line x1="454" y1="10" x2="416" y2="46" stroke="url(#mirrorGrad)" stroke-width="2"/>
+    <text x="435" y="55" text-anchor="middle" fill="#00d4ff" font-family="Arial,sans-serif" font-size="7">PY ◣</text>
+
+    <!-- Blue Pyramid at (5,6) ◣ -->
+    <rect x="294" y="62" width="50" height="50" rx="4" fill="url(#blueGrad)" filter="url(#glow)"/>
+    <polygon points="338,68 300,104 338,104" fill="#0974d3" opacity="0.5"/>
+    <line x1="338" y1="68" x2="300" y2="104" stroke="url(#mirrorGrad)" stroke-width="2"/>
+    <text x="319" y="113" text-anchor="middle" fill="#00d4ff" font-family="Arial,sans-serif" font-size="7">PY ◣</text>
+
+    <!-- ========== ROW 5 (y=174): Blue pieces ========== -->
+    <!-- Blue Pyramid at (2,5) ◢ -->
+    <rect x="120" y="120" width="50" height="50" rx="4" fill="url(#blueGrad)" filter="url(#glow)"/>
+    <polygon points="126,126 164,164 126,164" fill="#0974d3" opacity="0.5"/>
+    <line x1="126" y1="126" x2="164" y2="164" stroke="url(#mirrorGrad)" stroke-width="2"/>
+    <text x="145" y="171" text-anchor="middle" fill="#00d4ff" font-family="Arial,sans-serif" font-size="7">PY ◢</text>
+
+    <!-- Blue Scarab at (7,5) ╲ -->
+    <rect x="410" y="120" width="50" height="50" rx="4" fill="url(#blueGrad)" opacity="0.7" filter="url(#glow)"/>
+    <rect x="410" y="120" width="50" height="50" rx="4" fill="url(#goldGrad)" opacity="0.3"/>
+    <line x1="416" y1="126" x2="454" y2="164" stroke="url(#mirrorGrad)" stroke-width="3"/>
+    <text x="435" y="148" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-size="12" font-weight="bold">★</text>
+    <text x="435" y="171" text-anchor="middle" fill="#daa520" font-family="Arial,sans-serif" font-size="7">SCR ╲</text>
+
+    <!-- ========== ROW 4 (y=232): Middle ========== -->
+    <!-- Blue Pyramid at (3,4) ◢ -->
+    <rect x="178" y="178" width="50" height="50" rx="4" fill="url(#blueGrad)" filter="url(#glow)"/>
+    <polygon points="184,184 222,222 184,222" fill="#0974d3" opacity="0.5"/>
+    <line x1="184" y1="184" x2="222" y2="222" stroke="url(#mirrorGrad)" stroke-width="2"/>
+    <text x="203" y="229" text-anchor="middle" fill="#00d4ff" font-family="Arial,sans-serif" font-size="7">PY ◢</text>
+
+    <!-- Red Pyramid at (6,4) ◤ -->
+    <rect x="352" y="178" width="50" height="50" rx="4" fill="url(#redGrad)" filter="url(#glow)"/>
+    <polygon points="358,184 396,184 396,222" fill="#c81d4e" opacity="0.5"/>
+    <line x1="358" y1="184" x2="396" y2="222" stroke="url(#mirrorGrad)" stroke-width="2"/>
+    <text x="377" y="229" text-anchor="middle" fill="#e94560" font-family="Arial,sans-serif" font-size="7">PY ◤</text>
+
+    <!-- ========== ROW 3 (y=290): Middle ========== -->
+    <!-- Blue Pyramid at (3,3) ◣ -->
+    <rect x="178" y="236" width="50" height="50" rx="4" fill="url(#blueGrad)" filter="url(#glow)"/>
+    <polygon points="222,242 184,280 222,280" fill="#0974d3" opacity="0.5"/>
+    <line x1="222" y1="242" x2="184" y2="280" stroke="url(#mirrorGrad)" stroke-width="2"/>
+    <text x="203" y="287" text-anchor="middle" fill="#00d4ff" font-family="Arial,sans-serif" font-size="7">PY ◣</text>
+
+    <!-- Red Pyramid at (6,3) ◥ -->
+    <rect x="352" y="236" width="50" height="50" rx="4" fill="url(#redGrad)" filter="url(#glow)"/>
+    <polygon points="358,242 396,242 358,280" fill="#c81d4e" opacity="0.5"/>
+    <line x1="396" y1="242" x2="358" y2="280" stroke="url(#mirrorGrad)" stroke-width="2"/>
+    <text x="377" y="287" text-anchor="middle" fill="#e94560" font-family="Arial,sans-serif" font-size="7">PY ◥</text>
+
+    <!-- ========== ROW 2 (y=348): Red pieces ========== -->
+    <!-- Red Scarab at (2,2) ╱ -->
+    <rect x="120" y="294" width="50" height="50" rx="4" fill="url(#redGrad)" opacity="0.7" filter="url(#glow)"/>
+    <rect x="120" y="294" width="50" height="50" rx="4" fill="url(#goldGrad)" opacity="0.3"/>
+    <line x1="164" y1="300" x2="126" y2="338" stroke="url(#mirrorGrad)" stroke-width="3"/>
+    <text x="145" y="322" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-size="12" font-weight="bold">★</text>
+    <text x="145" y="345" text-anchor="middle" fill="#daa520" font-family="Arial,sans-serif" font-size="7">SCR ╱</text>
+
+    <!-- Red Pyramid at (7,2) ◤ -->
+    <rect x="410" y="294" width="50" height="50" rx="4" fill="url(#redGrad)" filter="url(#glow)"/>
+    <polygon points="416,300 454,300 454,338" fill="#c81d4e" opacity="0.5"/>
+    <line x1="416" y1="300" x2="454" y2="338" stroke="url(#mirrorGrad)" stroke-width="2"/>
+    <text x="435" y="345" text-anchor="middle" fill="#e94560" font-family="Arial,sans-serif" font-size="7">PY ◤</text>
+
+    <!-- ========== ROW 1 (y=406): Red pieces ========== -->
+    <!-- Red Pyramid at (4,1) ◥ -->
+    <rect x="236" y="352" width="50" height="50" rx="4" fill="url(#redGrad)" filter="url(#glow)"/>
+    <polygon points="242,358 280,358 242,396" fill="#c81d4e" opacity="0.5"/>
+    <line x1="280" y1="358" x2="242" y2="396" stroke="url(#mirrorGrad)" stroke-width="2"/>
+    <text x="261" y="403" text-anchor="middle" fill="#e94560" font-family="Arial,sans-serif" font-size="7">PY ◥</text>
+
+    <!-- ========== ROW 0 (bottom, y=464): Red pieces ========== -->
+    <!-- Red Pyramid at (2,0) ◥ -->
+    <rect x="120" y="410" width="50" height="50" rx="4" fill="url(#redGrad)" filter="url(#glow)"/>
+    <polygon points="126,416 164,416 126,454" fill="#c81d4e" opacity="0.5"/>
+    <line x1="164" y1="416" x2="126" y2="454" stroke="url(#mirrorGrad)" stroke-width="2"/>
+    <text x="145" y="461" text-anchor="middle" fill="#e94560" font-family="Arial,sans-serif" font-size="7">PY ◥</text>
+
+    <!-- Red Pyramid at (3,0) ◥ -->
+    <rect x="178" y="410" width="50" height="50" rx="4" fill="url(#redGrad)" filter="url(#glow)"/>
+    <polygon points="184,416 222,416 184,454" fill="#c81d4e" opacity="0.5"/>
+    <line x1="222" y1="416" x2="184" y2="454" stroke="url(#mirrorGrad)" stroke-width="2"/>
+    <text x="203" y="461" text-anchor="middle" fill="#e94560" font-family="Arial,sans-serif" font-size="7">PY ◥</text>
+
+    <!-- Red King at (4,0) -->
+    <rect x="236" y="410" width="50" height="50" rx="4" fill="url(#redGrad)" filter="url(#glow)"/>
+    <polygon points="250,444 254,428 259,438 261,422 263,438 268,428 272,444" fill="#ffe66d" stroke="#1a1a2e" stroke-width="0.5"/>
+    <rect x="250" y="444" width="22" height="4" rx="1" fill="#ffe66d"/>
+    <text x="261" y="461" text-anchor="middle" fill="#e94560" font-family="Arial,sans-serif" font-size="7">KING</text>
+
+    <!-- Red Anubis at (5,0) - shield facing north -->
+    <rect x="294" y="410" width="50" height="50" rx="4" fill="url(#redGrad)" filter="url(#glow)"/>
+    <rect x="296" y="412" width="46" height="8" rx="2" fill="url(#shieldGrad)" opacity="0.9"/>
+    <text x="319" y="445" text-anchor="middle" fill="#1a1a2e" font-family="Arial,sans-serif" font-size="18" font-weight="bold">A</text>
+
+    <!-- Red Sphinx at (9,0) - faces left ← -->
+    <rect x="526" y="410" width="50" height="50" rx="4" fill="url(#redGrad)" filter="url(#glow)"/>
+    <polygon points="558,419 538,435 558,451" fill="#1a1a2e"/>
+    <polygon points="556,422 540,435 556,448" fill="#ffe66d" opacity="0.8"/>
+    <text x="551" y="461" text-anchor="middle" fill="#e94560" font-family="Arial,sans-serif" font-size="7">←SPH</text>
+  </g>
+
+  <!-- Legend -->
+  <g transform="translate(60, 555)">
+    <rect x="0" y="0" width="580" height="50" rx="4" fill="#0a2040" stroke="#1a4a7a" stroke-width="1"/>
+    <text x="10" y="16" fill="#aaa" font-family="Arial,sans-serif" font-size="10" font-weight="bold">Legend:</text>
+
+    <!-- Blue pieces -->
+    <rect x="10" y="22" width="12" height="12" rx="2" fill="url(#blueGrad)"/>
+    <text x="26" y="32" fill="#00d4ff" font-family="Arial,sans-serif" font-size="9">Blue (top)</text>
+
+    <!-- Red pieces -->
+    <rect x="95" y="22" width="12" height="12" rx="2" fill="url(#redGrad)"/>
+    <text x="111" y="32" fill="#e94560" font-family="Arial,sans-serif" font-size="9">Red (bottom)</text>
+
+    <!-- Mirror -->
+    <line x1="190" y1="28" x2="210" y2="28" stroke="url(#mirrorGrad)" stroke-width="2"/>
+    <text x="215" y="32" fill="#aaa" font-family="Arial,sans-serif" font-size="9">Mirror</text>
+
+    <!-- Shield -->
+    <rect x="262" y="24" width="16" height="6" rx="1" fill="url(#shieldGrad)"/>
+    <text x="282" y="32" fill="#aaa" font-family="Arial,sans-serif" font-size="9">Shield</text>
+
+    <!-- Crown -->
+    <text x="332" y="32" fill="#ffe66d" font-family="Arial,sans-serif" font-size="9">Crown = King</text>
+
+    <!-- Star -->
+    <text x="418" y="33" fill="#daa520" font-family="Arial,sans-serif" font-size="12">★</text>
+    <text x="432" y="32" fill="#aaa" font-family="Arial,sans-serif" font-size="9">= Scarab (indestructible)</text>
+  </g>
+</svg>

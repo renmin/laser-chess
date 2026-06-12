@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200" width="400" height="200">
+  <defs>
+    <linearGradient id="disruptGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#e74c3c"/>
+      <stop offset="100%" style="stop-color:#8e44ad"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="pulseGlow">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <rect width="400" height="200" rx="8" fill="#1a1a2e"/>
+
+  <text x="200" y="22" text-anchor="middle" fill="#aaa" font-family="Arial,sans-serif" font-size="14" font-weight="bold">DISRUPTOR - Disables adjacent enemy pieces</text>
+
+  <!-- Disruptor piece -->
+  <g transform="translate(30, 35)">
+    <rect x="0" y="0" width="110" height="110" rx="8" fill="#2a1a2e" stroke="#444" stroke-width="1"/>
+    <!-- Disruption field rings -->
+    <circle cx="55" cy="55" r="50" fill="none" stroke="#e74c3c" stroke-width="1" opacity="0.2" filter="url(#pulseGlow)"/>
+    <circle cx="55" cy="55" r="42" fill="none" stroke="#8e44ad" stroke-width="1" opacity="0.3"/>
+    <rect x="10" y="10" width="90" height="90" rx="6" fill="url(#disruptGrad)" filter="url(#glow)"/>
+    <!-- Disruption symbol - concentric circles with lightning -->
+    <circle cx="55" cy="55" r="25" fill="none" stroke="#ff6b6b" stroke-width="2" opacity="0.7"/>
+    <circle cx="55" cy="55" r="17" fill="none" stroke="#ff9999" stroke-width="1.5" opacity="0.6"/>
+    <circle cx="55" cy="55" r="9" fill="#ff6b6b" opacity="0.5"/>
+    <!-- Lightning bolt in center -->
+    <polygon points="53,38 60,52 54,52 57,72 50,55 56,55" fill="#ffe66d" opacity="0.9"/>
+    <text x="55" y="128" text-anchor="middle" fill="#e74c3c" font-family="Arial,sans-serif" font-size="10">Disruptor</text>
+  </g>
+
+  <!-- Effect diagram -->
+  <g transform="translate(170, 35)">
+    <rect x="0" y="0" width="200" height="120" rx="6" fill="#0f3460"/>
+    <text x="100" y="17" text-anchor="middle" fill="#ddd" font-family="Arial,sans-serif" font-size="10">Area of Effect (8 adjacent cells):</text>
+
+    <!-- 3x3 grid showing effect area -->
+    <g transform="translate(50, 25)">
+      <!-- Effect area background -->
+      <rect x="0" y="0" width="100" height="80" fill="#e74c3c" opacity="0.1" rx="3"/>
+
+      <!-- Grid cells -->
+      <rect x="3" y="3" width="28" height="24" rx="2" fill="#e74c3c" opacity="0.2" stroke="#e74c3c" stroke-width="0.5"/>
+      <rect x="36" y="3" width="28" height="24" rx="2" fill="#e74c3c" opacity="0.2" stroke="#e74c3c" stroke-width="0.5"/>
+      <rect x="69" y="3" width="28" height="24" rx="2" fill="#e74c3c" opacity="0.2" stroke="#e74c3c" stroke-width="0.5"/>
+
+      <rect x="3" y="30" width="28" height="24" rx="2" fill="#e74c3c" opacity="0.2" stroke="#e74c3c" stroke-width="0.5"/>
+      <rect x="36" y="30" width="28" height="24" rx="2" fill="url(#disruptGrad)" opacity="0.8" rx="3"/>
+      <rect x="69" y="30" width="28" height="24" rx="2" fill="#e74c3c" opacity="0.2" stroke="#e74c3c" stroke-width="0.5"/>
+
+      <rect x="3" y="57" width="28" height="24" rx="2" fill="#e74c3c" opacity="0.2" stroke="#e74c3c" stroke-width="0.5"/>
+      <rect x="36" y="57" width="28" height="24" rx="2" fill="#e74c3c" opacity="0.2" stroke="#e74c3c" stroke-width="0.5"/>
+      <rect x="69" y="57" width="28" height="24" rx="2" fill="#e74c3c" opacity="0.2" stroke="#e74c3c" stroke-width="0.5"/>
+
+      <!-- Disruptor in center -->
+      <text x="50" y="46" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-size="10" font-weight="bold">D</text>
+
+      <!-- Disabled icons in surrounding cells -->
+      <text x="17" y="19" text-anchor="middle" fill="#ff6b6b" font-family="Arial,sans-serif" font-size="10">⊘</text>
+      <text x="50" y="19" text-anchor="middle" fill="#ff6b6b" font-family="Arial,sans-serif" font-size="10">⊘</text>
+      <text x="83" y="19" text-anchor="middle" fill="#ff6b6b" font-family="Arial,sans-serif" font-size="10">⊘</text>
+      <text x="17" y="46" text-anchor="middle" fill="#ff6b6b" font-family="Arial,sans-serif" font-size="10">⊘</text>
+      <text x="83" y="46" text-anchor="middle" fill="#ff6b6b" font-family="Arial,sans-serif" font-size="10">⊘</text>
+      <text x="17" y="73" text-anchor="middle" fill="#ff6b6b" font-family="Arial,sans-serif" font-size="10">⊘</text>
+      <text x="50" y="73" text-anchor="middle" fill="#ff6b6b" font-family="Arial,sans-serif" font-size="10">⊘</text>
+      <text x="83" y="73" text-anchor="middle" fill="#ff6b6b" font-family="Arial,sans-serif" font-size="10">⊘</text>
+    </g>
+
+    <text x="100" y="115" text-anchor="middle" fill="#888" font-family="Arial,sans-serif" font-size="8">⊘ = enemy pieces disabled (cannot move/rotate)</text>
+  </g>
+
+  <text x="200" y="175" text-anchor="middle" fill="#666" font-family="Arial,sans-serif" font-size="11">0-2 per side. Advanced scenarios only. Cannot rotate (omnidirectional).</text>
+  <text x="200" y="190" text-anchor="middle" fill="#555" font-family="Arial,sans-serif" font-size="10">Disables enemy pieces in all 8 adjacent cells for 1 turn. Destroyed if hit by laser.</text>
+</svg>
