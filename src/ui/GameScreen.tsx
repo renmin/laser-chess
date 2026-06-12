@@ -219,7 +219,7 @@ export function GameScreen({ onBackToMenu, aiConfig }: Props) {
       phaseRef.current = 'idle';
       SoundManager.turnChange();
       renderFrame();
-      scheduleAI();
+      scheduleAI(result.state);
       return;
     }
 
@@ -284,7 +284,7 @@ export function GameScreen({ onBackToMenu, aiConfig }: Props) {
 
         phaseRef.current = 'idle';
         renderFrame();
-        scheduleAI();
+        scheduleAI(result.state);
       }
     };
     rafRef.current = requestAnimationFrame(laserTick);
@@ -296,7 +296,7 @@ export function GameScreen({ onBackToMenu, aiConfig }: Props) {
     phaseRef.current = 'idle';
     SoundManager.turnChange();
     renderFrame();
-    scheduleAI();
+    scheduleAI(result.state);
   }
 
   function handleCanvasClick(e: React.MouseEvent<HTMLCanvasElement>) {
@@ -373,17 +373,19 @@ export function GameScreen({ onBackToMenu, aiConfig }: Props) {
   }, []);
 
   // AI auto-play trigger
-  function scheduleAI() {
+  function scheduleAI(nextState?: GameState) {
     if (!aiConfig) return;
-    if (gameStateRef.current.status !== 'playing') return;
-    if (gameStateRef.current.currentPlayer !== aiConfig.aiPlayer) return;
+    const state = nextState ?? gameStateRef.current;
+    if (state.status !== 'playing') return;
+    if (state.currentPlayer !== aiConfig.aiPlayer) return;
 
     setTimeout(() => {
       if (phaseRef.current !== 'idle') return;
-      if (gameStateRef.current.currentPlayer !== aiConfig.aiPlayer) return;
-      if (gameStateRef.current.status !== 'playing') return;
+      const s = gameStateRef.current;
+      if (s.currentPlayer !== aiConfig.aiPlayer) return;
+      if (s.status !== 'playing') return;
       initAudio();
-      const move = findBestMove(gameStateRef.current, aiConfig.depth);
+      const move = findBestMove(s, aiConfig.depth);
       if (move) doMove(move);
     }, 400);
   }
