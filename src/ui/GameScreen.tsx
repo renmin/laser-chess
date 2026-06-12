@@ -10,6 +10,8 @@ import { drawPieces, type PieceAnimOverride } from '../renderer/piece-renderer';
 import { drawLaserAnimated, getLaserAnimDuration, type LaserAnimState } from '../renderer/laser-renderer';
 import { triggerExplosion, updateAndDrawExplosions, clearExplosions } from '../renderer/effects';
 import { SoundManager } from '../audio/sound-manager';
+import { findBestMove } from '../core/ai';
+import type { AIConfig } from '../App';
 import { GameHUD } from './GameHUD';
 
 const MOVE_ANIM_DURATION = 200;
@@ -41,9 +43,10 @@ type Phase = 'idle' | 'moveAnim' | 'laser' | 'explosions';
 
 interface Props {
   onBackToMenu: () => void;
+  aiConfig?: AIConfig | null;
 }
 
-export function GameScreen({ onBackToMenu }: Props) {
+export function GameScreen({ onBackToMenu, aiConfig }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [gameState, setGameState] = useState<GameState>(() => createGame(CLASSIC_LAYOUT));
   const [selectedPiece, setSelectedPiece] = useState<Piece | null>(null);
@@ -296,6 +299,7 @@ export function GameScreen({ onBackToMenu }: Props) {
   function handleCanvasClick(e: React.MouseEvent<HTMLCanvasElement>) {
     initAudio();
     if (gameStateRef.current.status !== 'playing' || phaseRef.current !== 'idle') return;
+    if (aiConfig && gameStateRef.current.currentPlayer === aiConfig.aiPlayer) return;
 
     const rect = canvasRef.current!.getBoundingClientRect();
     const scaleX = width / rect.width;
@@ -363,6 +367,22 @@ export function GameScreen({ onBackToMenu }: Props) {
   useEffect(() => {
     return () => cancelAnimationFrame(rafRef.current);
   }, []);
+
+  // AI auto-play trigger
+  useEffect(() => {
+    if (!aiConfig) return;
+    if (gameState.status !== 'playing') return;
+    if (gameState.currentPlayer !== aiConfig.aiPlayer) return;
+    if (phaseRef.current !== 'idle') return;
+
+    const timer = setTimeout(() => {
+      initAudio();
+      const move = findBestMove(gameStateRef.current, aiConfig.depth);
+      if (move) doMove(move);
+    }, 400);
+
+    return () => clearTimeout(timer);
+  }, [gameState.turnNumber, gameState.status, aiConfig]);
 
   const isIdle = phaseRef.current === 'idle';
   const winner = showWinner && gameState.status !== 'playing' ? gameState.status : null;

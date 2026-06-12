@@ -1,10 +1,14 @@
+import { useState } from 'react';
 import { COLORS } from '../constants';
 
 interface Props {
-  onStartGame: () => void;
+  onStartLocal: () => void;
+  onStartAI: (depth: number) => void;
 }
 
-export function MainMenu({ onStartGame }: Props) {
+export function MainMenu({ onStartLocal, onStartAI }: Props) {
+  const [showAI, setShowAI] = useState(false);
+
   return (
     <div style={{
       display: 'flex',
@@ -25,9 +29,33 @@ export function MainMenu({ onStartGame }: Props) {
         background: `linear-gradient(to right, ${COLORS.blue}, ${COLORS.laser}, ${COLORS.red})`,
         marginBottom: 48,
       }} />
-      <button onClick={onStartGame} style={buttonStyle}>
-        Play Local
-      </button>
+
+      {!showAI ? (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <button onClick={onStartLocal} style={buttonStyle}>
+            Local Multiplayer
+          </button>
+          <button onClick={() => setShowAI(true)} style={{ ...buttonStyle, backgroundColor: COLORS.red }}>
+            vs AI
+          </button>
+        </div>
+      ) : (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12, alignItems: 'center' }}>
+          <div style={{ fontSize: 14, color: COLORS.textDim, marginBottom: 4 }}>Select Difficulty</div>
+          <button onClick={() => onStartAI(1)} style={{ ...buttonStyle, backgroundColor: '#27ae60' }}>
+            Easy
+          </button>
+          <button onClick={() => onStartAI(2)} style={{ ...buttonStyle, backgroundColor: '#f39c12' }}>
+            Medium
+          </button>
+          <button onClick={() => onStartAI(3)} style={{ ...buttonStyle, backgroundColor: '#e74c3c' }}>
+            Hard
+          </button>
+          <button onClick={() => setShowAI(false)} style={{ ...buttonStyleSmall, marginTop: 8 }}>
+            ← Back
+          </button>
+        </div>
+      )}
     </div>
   );
 }
@@ -41,5 +69,15 @@ const buttonStyle: React.CSSProperties = {
   cursor: 'pointer',
   backgroundColor: COLORS.blue,
   color: '#1a1a2e',
-  transition: 'transform 0.1s, opacity 0.1s',
+  minWidth: 220,
+};
+
+const buttonStyleSmall: React.CSSProperties = {
+  padding: '8px 24px',
+  fontSize: 14,
+  border: 'none',
+  borderRadius: 4,
+  cursor: 'pointer',
+  backgroundColor: 'transparent',
+  color: COLORS.textDim,
 };
