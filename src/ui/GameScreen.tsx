@@ -219,6 +219,7 @@ export function GameScreen({ onBackToMenu, aiConfig }: Props) {
       phaseRef.current = 'idle';
       SoundManager.turnChange();
       renderFrame();
+      scheduleAI();
       return;
     }
 
@@ -283,6 +284,7 @@ export function GameScreen({ onBackToMenu, aiConfig }: Props) {
 
         phaseRef.current = 'idle';
         renderFrame();
+        scheduleAI();
       }
     };
     rafRef.current = requestAnimationFrame(laserTick);
@@ -294,6 +296,7 @@ export function GameScreen({ onBackToMenu, aiConfig }: Props) {
     phaseRef.current = 'idle';
     SoundManager.turnChange();
     renderFrame();
+    scheduleAI();
   }
 
   function handleCanvasClick(e: React.MouseEvent<HTMLCanvasElement>) {
@@ -362,6 +365,7 @@ export function GameScreen({ onBackToMenu, aiConfig }: Props) {
     gameStateRef.current = newState;
     setSelectedPiece(null);
     setShowWinner(false);
+    // scheduleAI will be called by the idle render loop if needed
   }
 
   useEffect(() => {
@@ -369,20 +373,20 @@ export function GameScreen({ onBackToMenu, aiConfig }: Props) {
   }, []);
 
   // AI auto-play trigger
-  useEffect(() => {
+  function scheduleAI() {
     if (!aiConfig) return;
-    if (gameState.status !== 'playing') return;
-    if (gameState.currentPlayer !== aiConfig.aiPlayer) return;
-    if (phaseRef.current !== 'idle') return;
+    if (gameStateRef.current.status !== 'playing') return;
+    if (gameStateRef.current.currentPlayer !== aiConfig.aiPlayer) return;
 
-    const timer = setTimeout(() => {
+    setTimeout(() => {
+      if (phaseRef.current !== 'idle') return;
+      if (gameStateRef.current.currentPlayer !== aiConfig.aiPlayer) return;
+      if (gameStateRef.current.status !== 'playing') return;
       initAudio();
       const move = findBestMove(gameStateRef.current, aiConfig.depth);
       if (move) doMove(move);
     }, 400);
-
-    return () => clearTimeout(timer);
-  }, [gameState.turnNumber, gameState.status, aiConfig]);
+  }
 
   const isIdle = phaseRef.current === 'idle';
   const winner = showWinner && gameState.status !== 'playing' ? gameState.status : null;
