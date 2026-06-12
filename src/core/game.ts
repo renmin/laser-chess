@@ -1,4 +1,4 @@
-import type { GameState, LaserResult, MoveAction, Piece, Player, Layout } from '../types';
+import type { Board, GameState, LaserResult, MoveAction, Piece, Player, Layout } from '../types';
 import { cloneBoard, movePiece, removePiece } from './board';
 import { getValidMoves, rotatePiece } from './pieces';
 import { calculateLaser } from './laser';
@@ -17,6 +17,7 @@ export function createGame(layout: Layout): GameState {
 
 export interface MoveResult {
   state: GameState;
+  boardAfterMove: Board;
   laser: LaserResult;
   destroyedPieces: Piece[];
 }
@@ -59,6 +60,8 @@ export function executeMove(state: GameState, action: MoveAction): MoveResult | 
 
   const laser = calculateLaser(newBoard, state.currentPlayer);
 
+  const boardAfterMove = cloneBoard(newBoard);
+
   const destroyedPieces: Piece[] = [];
   for (const id of laser.destroyedPieceIds) {
     const removed = removePiece(newBoard, id);
@@ -90,5 +93,5 @@ export function executeMove(state: GameState, action: MoveAction): MoveResult | 
     lastLaser: laser,
   };
 
-  return { state: newState, laser, destroyedPieces };
+  return { state: newState, boardAfterMove, laser, destroyedPieces };
 }

@@ -1,4 +1,4 @@
-import type { Board, Player } from '../types';
+import type { Board } from '../types';
 import { BOARD_WIDTH, BOARD_HEIGHT, CELL_SIZE, BOARD_PADDING, COLORS } from '../constants';
 
 export function drawBoard(ctx: CanvasRenderingContext2D, board: Board) {
@@ -7,9 +7,15 @@ export function drawBoard(ctx: CanvasRenderingContext2D, board: Board) {
   const ox = BOARD_PADDING;
   const oy = BOARD_PADDING;
 
-  ctx.fillStyle = COLORS.boardBg;
+  // Board background with subtle gradient
+  const boardGrad = ctx.createLinearGradient(ox, oy, ox + w, oy + h);
+  boardGrad.addColorStop(0, '#0d2d52');
+  boardGrad.addColorStop(0.5, COLORS.boardBg);
+  boardGrad.addColorStop(1, '#0d2d52');
+  ctx.fillStyle = boardGrad;
   ctx.fillRect(ox, oy, w, h);
 
+  // Restriction zones with gradient
   for (let col = 0; col < BOARD_WIDTH; col++) {
     for (let row = 0; row < BOARD_HEIGHT; row++) {
       const restriction = board.cells[col][row].restriction;
@@ -22,6 +28,7 @@ export function drawBoard(ctx: CanvasRenderingContext2D, board: Board) {
     }
   }
 
+  // Grid lines
   ctx.strokeStyle = COLORS.gridLine;
   ctx.lineWidth = 1;
   for (let col = 0; col <= BOARD_WIDTH; col++) {
@@ -37,6 +44,22 @@ export function drawBoard(ctx: CanvasRenderingContext2D, board: Board) {
     ctx.stroke();
   }
 
+  // Vignette overlay
+  const vigGrad = ctx.createRadialGradient(
+    ox + w / 2, oy + h / 2, Math.min(w, h) * 0.3,
+    ox + w / 2, oy + h / 2, Math.max(w, h) * 0.75,
+  );
+  vigGrad.addColorStop(0, 'rgba(0,0,0,0)');
+  vigGrad.addColorStop(1, 'rgba(0,0,0,0.25)');
+  ctx.fillStyle = vigGrad;
+  ctx.fillRect(ox, oy, w, h);
+
+  // Edge glow lines
+  ctx.strokeStyle = 'rgba(26, 74, 122, 0.5)';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(ox, oy, w, h);
+
+  // Labels
   ctx.fillStyle = COLORS.textDim;
   ctx.font = '11px monospace';
   ctx.textAlign = 'center';
@@ -70,14 +93,23 @@ export function drawValidMoves(ctx: CanvasRenderingContext2D, positions: { col: 
     const { x, y } = cellToScreen(pos.col, pos.row);
     ctx.fillStyle = COLORS.validMove;
     ctx.fillRect(x + 2, y + 2, CELL_SIZE - 4, CELL_SIZE - 4);
+    // Dot in center
+    ctx.fillStyle = 'rgba(0, 184, 148, 0.6)';
+    ctx.beginPath();
+    ctx.arc(x + CELL_SIZE / 2, y + CELL_SIZE / 2, 4, 0, Math.PI * 2);
+    ctx.fill();
   }
 }
 
-export function drawSelection(ctx: CanvasRenderingContext2D, col: number, row: number) {
+export function drawSelection(ctx: CanvasRenderingContext2D, col: number, row: number, pulse = 0) {
   const { x, y } = cellToScreen(col, row);
-  ctx.strokeStyle = COLORS.selectedOutline;
-  ctx.lineWidth = 3;
+  const alpha = 0.7 + Math.sin(pulse * 4) * 0.3;
+  ctx.strokeStyle = `rgba(255,255,255,${alpha})`;
+  ctx.lineWidth = 2.5;
+  ctx.shadowColor = 'rgba(255,255,255,0.5)';
+  ctx.shadowBlur = 8;
   ctx.strokeRect(x + 2, y + 2, CELL_SIZE - 4, CELL_SIZE - 4);
+  ctx.shadowBlur = 0;
 }
 
 export function getCanvasSize(): { width: number; height: number } {
@@ -92,8 +124,11 @@ export function drawSwapTargets(ctx: CanvasRenderingContext2D, positions: { col:
     const { x, y } = cellToScreen(pos.col, pos.row);
     ctx.strokeStyle = COLORS.gold;
     ctx.lineWidth = 2;
+    ctx.shadowColor = 'rgba(218,165,32,0.4)';
+    ctx.shadowBlur = 6;
     ctx.setLineDash([4, 4]);
     ctx.strokeRect(x + 2, y + 2, CELL_SIZE - 4, CELL_SIZE - 4);
     ctx.setLineDash([]);
+    ctx.shadowBlur = 0;
   }
 }

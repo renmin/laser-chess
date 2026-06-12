@@ -5,7 +5,7 @@ import { createEmptyBoard } from '../core/board';
 import { calculateLaser } from '../core/laser';
 import { drawBoard, getCanvasSize } from '../renderer/board-renderer';
 import { drawPieces } from '../renderer/piece-renderer';
-import { drawLaser } from '../renderer/laser-renderer';
+import { drawLaserAnimated } from '../renderer/laser-renderer';
 
 type Direction = 'N' | 'S' | 'E' | 'W';
 
@@ -80,7 +80,9 @@ export function TestHarness() {
     drawBoard(ctx, board);
     drawPieces(ctx, board);
     if (laserResult) {
-      drawLaser(ctx, laserResult);
+      // Show laser in "hold" phase: offset so elapsed = beamTime + 100ms (within hold window)
+      const beamMs = laserResult.segments.length / 18 * 1000;
+      drawLaserAnimated(ctx, { laser: laserResult, startTime: performance.now() - beamMs - 100, phase: 'hold' });
     }
   }, [board, laserResult, width, height]);
 
