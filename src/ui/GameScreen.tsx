@@ -140,8 +140,10 @@ export function GameScreen({ onBackToMenu, aiConfig }: Props) {
       });
     } else if (action.type === 'rotate') {
       SoundManager.pieceRotate();
-      // Unified: ccw (Left button) = canvas -PI/2, cw (Right button) = canvas +PI/2
-      const angle = action.direction === 'ccw' ? -Math.PI / 2 : Math.PI / 2;
+      // deg+90 = visual clockwise on screen = canvas +PI/2
+      // ccw button (Rotate Left) does deg+90 which is visual CW → canvas +PI/2
+      // cw button (Rotate Right) does deg-90 which is visual CCW → canvas -PI/2
+      const angle = action.direction === 'ccw' ? Math.PI / 2 : -Math.PI / 2;
       startMoveAnim({
         pieceId: action.pieceId, type: 'rotate',
         fromX: 0, fromY: 0, toX: 0, toY: 0,
