@@ -80,18 +80,13 @@ export function LayoutEditor() {
 
   function handleRotate() {
     if (!selectedPieceId) return;
-    const PYRAMID_NEXT: Record<number, OrientationDeg> = { 0: 90, 90: 180, 180: 270, 270: 0 };
     setBoard(prev => ({
       ...prev,
       pieces: prev.pieces.map(p => {
         if (p.id !== selectedPieceId) return p;
-        if (p.type === 'pyramid') {
-          return { ...p, deg: PYRAMID_NEXT[p.deg] ?? p.deg };
-        }
-        if (p.type === 'scarab') {
-          return { ...p, deg: ((p.deg + 90) % 360) as OrientationDeg };
-        }
-        return { ...p, deg: (((p.deg - 90) % 360 + 360) % 360) as OrientationDeg };
+        if (p.type === 'king') return p;
+        // Unified: +90 for all piece types (same as Rotate Left / ccw)
+        return { ...p, deg: ((p.deg + 90) % 360) as OrientationDeg };
       }),
     }));
   }

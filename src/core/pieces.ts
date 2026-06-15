@@ -56,27 +56,11 @@ export function getSwapTargets(board: Board, piece: Piece): Piece[] {
     .filter(Boolean);
 }
 
-// Visual CW rotation order: 0 → 90 → 180 → 270 → 0
-// Rotate Left (ccw in code) = visual CW: 0→90→180→270
-// Rotate Right (cw in code) = visual CCW: 0→270→180→90
-const PYRAMID_LEFT: Record<number, OrientationDeg> = { 0: 90, 90: 180, 180: 270, 270: 0 };
-const PYRAMID_RIGHT: Record<number, OrientationDeg> = { 0: 270, 270: 180, 180: 90, 90: 0 };
-
 export function rotatePiece(piece: Piece, direction: 'cw' | 'ccw'): void {
   if (piece.type === 'king') return;
-
-  if (piece.type === 'pyramid') {
-    const map = direction === 'ccw' ? PYRAMID_LEFT : PYRAMID_RIGHT;
-    piece.deg = map[piece.deg] ?? piece.deg;
-    return;
-  }
-
-  if (piece.type === 'scarab') {
-    const step = direction === 'cw' ? 90 : -90;
-    piece.deg = (((piece.deg + step) % 360 + 360) % 360) as OrientationDeg;
-    return;
-  }
-
-  const step = direction === 'cw' ? -90 : 90;
+  // Unified for all piece types:
+  //   Rotate Left button passes 'ccw' → +90 (counterclockwise = math positive)
+  //   Rotate Right button passes 'cw' → -90 (clockwise)
+  const step = direction === 'ccw' ? 90 : -90;
   piece.deg = (((piece.deg + step) % 360 + 360) % 360) as OrientationDeg;
 }

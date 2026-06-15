@@ -140,14 +140,8 @@ export function GameScreen({ onBackToMenu, aiConfig }: Props) {
       });
     } else if (action.type === 'rotate') {
       SoundManager.pieceRotate();
-      const piece_ = gameStateRef.current.board.pieces.find(p => p.id === action.pieceId);
-      let angle: number;
-      if (piece_ && (piece_.type === 'sphinx' || piece_.type === 'anubis')) {
-        angle = action.direction === 'cw' ? Math.PI / 2 : -Math.PI / 2;
-      } else {
-        // Pyramid/Scarab
-        angle = action.direction === 'ccw' ? -Math.PI / 2 : Math.PI / 2;
-      }
+      // Unified: ccw (Left button) = canvas -PI/2, cw (Right button) = canvas +PI/2
+      const angle = action.direction === 'ccw' ? -Math.PI / 2 : Math.PI / 2;
       startMoveAnim({
         pieceId: action.pieceId, type: 'rotate',
         fromX: 0, fromY: 0, toX: 0, toY: 0,
