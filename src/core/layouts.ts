@@ -36,25 +36,25 @@ export const CLASSIC_LAYOUT: Layout = {
     { type: 'anubis', owner: 'blue', col: 4, row: 7, deg: 180 },
     { type: 'anubis', owner: 'blue', col: 6, row: 7, deg: 180 },
 
-    { type: 'scarab', owner: 'red', col: 4, row: 3, deg: 90 },
+    { type: 'scarab', owner: 'red', col: 4, row: 3, deg: 270 },   // was 90
     { type: 'scarab', owner: 'red', col: 5, row: 3, deg: 0 },
     { type: 'scarab', owner: 'blue', col: 4, row: 4, deg: 0 },
-    { type: 'scarab', owner: 'blue', col: 5, row: 4, deg: 90 },
+    { type: 'scarab', owner: 'blue', col: 5, row: 4, deg: 270 },   // was 90
 
-    { type: 'pyramid', owner: 'red', col: 2, row: 0, deg: 90 },
+    { type: 'pyramid', owner: 'red', col: 2, row: 0, deg: 270 },   // was 90
     { type: 'pyramid', owner: 'red', col: 7, row: 1, deg: 0 },
-    { type: 'pyramid', owner: 'red', col: 3, row: 5, deg: 90 },
-    { type: 'pyramid', owner: 'red', col: 2, row: 3, deg: 90 },
+    { type: 'pyramid', owner: 'red', col: 3, row: 5, deg: 270 },   // was 90
+    { type: 'pyramid', owner: 'red', col: 2, row: 3, deg: 270 },   // was 90
     { type: 'pyramid', owner: 'red', col: 2, row: 4, deg: 180 },
     { type: 'pyramid', owner: 'red', col: 9, row: 3, deg: 180 },
-    { type: 'pyramid', owner: 'red', col: 9, row: 4, deg: 90 },
+    { type: 'pyramid', owner: 'red', col: 9, row: 4, deg: 270 },   // was 90
 
-    { type: 'pyramid', owner: 'blue', col: 7, row: 7, deg: 270 },
+    { type: 'pyramid', owner: 'blue', col: 7, row: 7, deg: 90 },   // was 270
     { type: 'pyramid', owner: 'blue', col: 2, row: 6, deg: 180 },
-    { type: 'pyramid', owner: 'blue', col: 6, row: 2, deg: 270 },
+    { type: 'pyramid', owner: 'blue', col: 6, row: 2, deg: 90 },   // was 270
     { type: 'pyramid', owner: 'blue', col: 7, row: 3, deg: 0 },
-    { type: 'pyramid', owner: 'blue', col: 7, row: 4, deg: 270 },
-    { type: 'pyramid', owner: 'blue', col: 0, row: 3, deg: 270 },
+    { type: 'pyramid', owner: 'blue', col: 7, row: 4, deg: 90 },   // was 270
+    { type: 'pyramid', owner: 'blue', col: 0, row: 3, deg: 90 },   // was 270
     { type: 'pyramid', owner: 'blue', col: 0, row: 4, deg: 0 },
   ],
 };

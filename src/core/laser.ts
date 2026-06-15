@@ -3,22 +3,21 @@ import { getPieceAt, isInBounds } from './board';
 import { DIRECTION_VECTORS } from '../constants';
 
 // Pyramid (single mirror) reflection table.
-// Derived from visual diagonal + bright-side:
-//   0°:  ╲ line, bright SW → S→E, W→N
-//   90°: ╱ line, bright SE → S→W, E→N
-//   180°:╲ line, bright NE → N→W, E→S
-//   270°:╱ line, bright NW → N→E, W→S
+// Base shape at deg=0: ╲ line, bright SW. Physical rotation by deg gives:
+//   0°:  ╲ SW bright → S→E, W→N
+//   90°: ╱ NW bright → N→E, W→S
+//   180°:╲ NE bright → N→W, E→S
+//   270°:╱ SE bright → S→W, E→N
 const PYRAMID_REFLECT: Record<number, Partial<Record<Direction, Direction>>> = {
   0:   { S: 'E', W: 'N' },
-  90:  { S: 'W', E: 'N' },
+  90:  { N: 'E', W: 'S' },
   180: { N: 'W', E: 'S' },
-  270: { N: 'E', W: 'S' },
+  270: { S: 'W', E: 'N' },
 };
 
 // Scarab (double mirror) — always reflects, never destroyed.
-// Reflects all 4 directions based on visual diagonal:
 //   0°/180° (╲): N↔W, E↔S
-//   90°/270° (╱): N↔E, S↔W
+//   90°/270° (╱): N↔E swapped → S↔W
 const SCARAB_REFLECT: Record<number, Record<Direction, Direction>> = {
   0:   { N: 'W', W: 'N', E: 'S', S: 'E' },
   90:  { N: 'E', E: 'N', S: 'W', W: 'S' },

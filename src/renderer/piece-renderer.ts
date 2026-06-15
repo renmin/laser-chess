@@ -36,43 +36,35 @@ function drawPiece(ctx: CanvasRenderingContext2D, piece: Piece, override?: Piece
   const y = override?.screenY ?? basePos.y;
   const cx = x + CELL_SIZE / 2;
   const cy = y + CELL_SIZE / 2;
-  const left = x + PAD;
-  const top = y + PAD;
 
   ctx.save();
+  ctx.translate(cx, cy);
 
-  if (override?.rotationRad) {
-    ctx.translate(cx, cy);
-    ctx.rotate(override.rotationRad);
-    ctx.translate(-cx, -cy);
-  }
+  // Apply piece rotation: static deg + animation override
+  const degRad = piece.deg * Math.PI / 180;
+  const animRad = override?.rotationRad ?? 0;
+  ctx.rotate(degRad + animRad);
+
+  // All draw functions now draw at deg=0 centered at origin (0,0)
 
   switch (piece.type) {
-    case 'sphinx':  drawSphinx(ctx, left, top, cx, cy, piece); break;
-    case 'king':    drawKing(ctx, left, top, cx, cy, piece); break;
-    case 'pyramid': drawPyramid(ctx, left, top, cx, cy, piece); break;
-    case 'scarab':  drawScarab(ctx, left, top, cx, cy, piece); break;
-    case 'anubis':  drawAnubis(ctx, left, top, cx, cy, piece); break;
+    case 'sphinx':  drawSphinx(ctx, piece); break;
+    case 'king':    drawKing(ctx, piece); break;
+    case 'pyramid': drawPyramid(ctx, piece); break;
+    case 'scarab':  drawScarab(ctx, piece); break;
+    case 'anubis':  drawAnubis(ctx, piece); break;
   }
 
   ctx.restore();
 }
 
-function pieceGradient(ctx: CanvasRenderingContext2D, cx: number, cy: number, colors: ReturnType<typeof ownerColors>) {
-  const g = ctx.createRadialGradient(cx - 4, cy - 4, 2, cx, cy, HALF * 1.2);
-  g.addColorStop(0, colors.light);
-  g.addColorStop(0.5, colors.main);
-  g.addColorStop(1, colors.dark);
-  return g;
-}
-
-function drawPieceShadow(ctx: CanvasRenderingContext2D, left: number, top: number) {
+function drawPieceShadow(ctx: CanvasRenderingContext2D) {
   ctx.shadowColor = 'rgba(0,0,0,0.5)';
   ctx.shadowBlur = 8;
   ctx.shadowOffsetX = 2;
   ctx.shadowOffsetY = 3;
   ctx.fillStyle = 'rgba(0,0,0,0.01)';
-  roundRect(ctx, left, top, INNER, INNER, 6);
+  roundRect(ctx, -HALF, -HALF, INNER, INNER, 6);
   ctx.fill();
   ctx.shadowColor = 'transparent';
   ctx.shadowBlur = 0;
@@ -80,120 +72,102 @@ function drawPieceShadow(ctx: CanvasRenderingContext2D, left: number, top: numbe
   ctx.shadowOffsetY = 0;
 }
 
-function drawPieceBase(ctx: CanvasRenderingContext2D, left: number, top: number, cx: number, cy: number, piece: Piece) {
+function drawPieceBase(ctx: CanvasRenderingContext2D, piece: Piece) {
   const colors = ownerColors(piece);
-  drawPieceShadow(ctx, left, top);
-  ctx.fillStyle = pieceGradient(ctx, cx, cy, colors);
-  roundRect(ctx, left, top, INNER, INNER, 6);
+  drawPieceShadow(ctx);
+
+  const g = ctx.createRadialGradient(-4, -4, 2, 0, 0, HALF * 1.2);
+  g.addColorStop(0, colors.light);
+  g.addColorStop(0.5, colors.main);
+  g.addColorStop(1, colors.dark);
+  ctx.fillStyle = g;
+  roundRect(ctx, -HALF, -HALF, INNER, INNER, 6);
   ctx.fill();
+
   ctx.strokeStyle = colors.dark;
   ctx.lineWidth = 1.5;
-  roundRect(ctx, left, top, INNER, INNER, 6);
+  roundRect(ctx, -HALF, -HALF, INNER, INNER, 6);
   ctx.stroke();
-  // Inner highlight
+
   ctx.strokeStyle = 'rgba(255,255,255,0.15)';
   ctx.lineWidth = 1;
-  roundRect(ctx, left + 1, top + 1, INNER - 2, INNER - 2, 5);
+  roundRect(ctx, -HALF + 1, -HALF + 1, INNER - 2, INNER - 2, 5);
   ctx.stroke();
 }
 
-// === SPHINX ===
-function drawSphinx(ctx: CanvasRenderingContext2D, left: number, top: number, cx: number, cy: number, piece: Piece) {
-  drawPieceBase(ctx, left, top, cx, cy, piece);
+// === SPHINX (deg=0: fires UP/North) ===
+function drawSphinx(ctx: CanvasRenderingContext2D, piece: Piece) {
+  drawPieceBase(ctx, piece);
 
-  // Laser emitter glow
   ctx.shadowColor = COLORS.laser;
   ctx.shadowBlur = 10;
   ctx.fillStyle = COLORS.crown;
   const a = INNER * 0.3;
+  // Arrow pointing up (North) at deg=0
   ctx.beginPath();
-  if (piece.deg === 90) {
-    ctx.moveTo(cx + a, cy); ctx.lineTo(cx - a * 0.4, cy - a * 0.65); ctx.lineTo(cx - a * 0.4, cy + a * 0.65);
-  } else if (piece.deg === 270) {
-    ctx.moveTo(cx - a, cy); ctx.lineTo(cx + a * 0.4, cy - a * 0.65); ctx.lineTo(cx + a * 0.4, cy + a * 0.65);
-  } else if (piece.deg === 0) {
-    ctx.moveTo(cx, cy - a); ctx.lineTo(cx - a * 0.65, cy + a * 0.4); ctx.lineTo(cx + a * 0.65, cy + a * 0.4);
-  } else {
-    ctx.moveTo(cx, cy + a); ctx.lineTo(cx - a * 0.65, cy - a * 0.4); ctx.lineTo(cx + a * 0.65, cy - a * 0.4);
-  }
+  ctx.moveTo(0, -a);
+  ctx.lineTo(-a * 0.65, a * 0.4);
+  ctx.lineTo(a * 0.65, a * 0.4);
   ctx.closePath();
   ctx.fill();
   ctx.shadowBlur = 0;
 
-  // Small laser dot
-  const dotDist = a * 0.7;
-  let dx = 0, dy = 0;
-  if (piece.deg === 0) dy = -dotDist;
-  else if (piece.deg === 90) dx = dotDist;
-  else if (piece.deg === 180) dy = dotDist;
-  else dx = -dotDist;
+  // Laser dot at tip
   ctx.fillStyle = '#fff';
   ctx.beginPath();
-  ctx.arc(cx + dx, cy + dy, 2, 0, Math.PI * 2);
+  ctx.arc(0, -a * 0.7, 2, 0, Math.PI * 2);
   ctx.fill();
 }
 
 // === KING ===
-function drawKing(ctx: CanvasRenderingContext2D, left: number, top: number, cx: number, cy: number, piece: Piece) {
-  // King glow aura
+function drawKing(ctx: CanvasRenderingContext2D, piece: Piece) {
   const colors = ownerColors(piece);
   ctx.shadowColor = colors.glow;
   ctx.shadowBlur = 14;
-  drawPieceBase(ctx, left, top, cx, cy, piece);
+  drawPieceBase(ctx, piece);
   ctx.shadowBlur = 0;
 
-  // Crown
   ctx.fillStyle = COLORS.crown;
   ctx.shadowColor = 'rgba(255,230,109,0.6)';
   ctx.shadowBlur = 6;
   const s = INNER * 0.18;
   ctx.beginPath();
-  ctx.moveTo(cx - s * 1.7, cy + s * 0.6);
-  ctx.lineTo(cx - s * 1.2, cy - s * 0.6);
-  ctx.lineTo(cx - s * 0.4, cy + s * 0.2);
-  ctx.lineTo(cx, cy - s * 1.5);
-  ctx.lineTo(cx + s * 0.4, cy + s * 0.2);
-  ctx.lineTo(cx + s * 1.2, cy - s * 0.6);
-  ctx.lineTo(cx + s * 1.7, cy + s * 0.6);
+  ctx.moveTo(-s * 1.7, s * 0.6);
+  ctx.lineTo(-s * 1.2, -s * 0.6);
+  ctx.lineTo(-s * 0.4, s * 0.2);
+  ctx.lineTo(0, -s * 1.5);
+  ctx.lineTo(s * 0.4, s * 0.2);
+  ctx.lineTo(s * 1.2, -s * 0.6);
+  ctx.lineTo(s * 1.7, s * 0.6);
   ctx.closePath();
   ctx.fill();
-  ctx.fillRect(cx - s * 1.7, cy + s * 0.6, s * 3.4, s * 0.5);
+  ctx.fillRect(-s * 1.7, s * 0.6, s * 3.4, s * 0.5);
   ctx.shadowBlur = 0;
 
-  // Gem on crown
   ctx.fillStyle = '#fff';
   ctx.beginPath();
-  ctx.arc(cx, cy - s * 1.2, 2, 0, Math.PI * 2);
+  ctx.arc(0, -s * 1.2, 2, 0, Math.PI * 2);
   ctx.fill();
 }
 
-// === PYRAMID ===
-function drawPyramid(ctx: CanvasRenderingContext2D, left: number, top: number, _cx: number, _cy: number, piece: Piece) {
-  const l = left, t = top, r = left + INNER, b = top + INNER;
+// === PYRAMID (deg=0: ╲ line, SW bright) ===
+function drawPyramid(ctx: CanvasRenderingContext2D, piece: Piece) {
   const colors = ownerColors(piece);
-  const isSlash = piece.deg === 90 || piece.deg === 270;
+  const h = HALF;
 
-  const triNW: [number, number][] = [[l, t], [r, t], [l, b]];
-  const triSE: [number, number][] = [[r, t], [r, b], [l, b]];
-  const triNE: [number, number][] = [[l, t], [r, t], [r, b]];
-  const triSW: [number, number][] = [[l, t], [l, b], [r, b]];
+  // At deg=0: diagonal from top-left(-h,-h) to bottom-right(h,h) = ╲
+  // SW triangle (bright): (-h,-h), (-h,h), (h,h)
+  // NE triangle (dark):   (-h,-h), (h,-h), (h,h)
+  const solidTri: [number, number][] = [[-h, -h], [-h, h], [h, h]];
+  const emptyTri: [number, number][] = [[-h, -h], [h, -h], [h, h]];
 
-  let solidTri: [number, number][], emptyTri: [number, number][];
-  switch (piece.deg) {
-    case 0:   solidTri = triSW; emptyTri = triNE; break;
-    case 90:  solidTri = triSE; emptyTri = triNW; break;
-    case 180: solidTri = triNE; emptyTri = triSW; break;
-    case 270: solidTri = triNW; emptyTri = triSE; break;
-    default:  solidTri = triSW; emptyTri = triNE;
-  }
+  drawPieceShadow(ctx);
 
-  drawPieceShadow(ctx, left, top);
-
-  // Dark (vulnerable) side — nearly invisible
+  // Dark side
   ctx.fillStyle = '#040810';
   fillTriangle(ctx, emptyTri);
 
-  // Bright (reflective) side — vivid owner color
+  // Bright side
   ctx.fillStyle = colors.light;
   ctx.globalAlpha = 0.85;
   fillTriangle(ctx, solidTri);
@@ -202,101 +176,81 @@ function drawPyramid(ctx: CanvasRenderingContext2D, left: number, top: number, _
   // Border
   ctx.strokeStyle = colors.dark;
   ctx.lineWidth = 1.5;
-  roundRect(ctx, left, top, INNER, INNER, 6);
+  roundRect(ctx, -h, -h, INNER, INNER, 6);
   ctx.stroke();
 
-  // Mirror line with strong glow
+  // Mirror line ╲
   ctx.strokeStyle = '#ffffff';
   ctx.lineWidth = 3;
   ctx.shadowColor = '#c0e0ff';
   ctx.shadowBlur = 10;
   ctx.beginPath();
-  if (isSlash) {
-    ctx.moveTo(r, t); ctx.lineTo(l, b);
-  } else {
-    ctx.moveTo(l, t); ctx.lineTo(r, b);
-  }
+  ctx.moveTo(-h, -h);
+  ctx.lineTo(h, h);
   ctx.stroke();
-  // Second pass for extra brightness
   ctx.lineWidth = 1.5;
   ctx.strokeStyle = 'rgba(255,255,255,0.8)';
   ctx.stroke();
   ctx.shadowBlur = 0;
 }
 
-// === SCARAB ===
-function drawScarab(ctx: CanvasRenderingContext2D, left: number, top: number, cx: number, cy: number, piece: Piece) {
+// === SCARAB (deg=0: ╲ double mirror) ===
+function drawScarab(ctx: CanvasRenderingContext2D, piece: Piece) {
   const colors = ownerColors(piece);
-  const l = left, t = top, r = left + INNER, b = top + INNER;
-  const scarabSlash = piece.deg === 90 || piece.deg === 270;
+  const h = HALF;
 
-  drawPieceShadow(ctx, left, top);
+  drawPieceShadow(ctx);
 
-  ctx.fillStyle = pieceGradient(ctx, cx, cy, colors);
-  roundRect(ctx, left, top, INNER, INNER, 6);
+  const g = ctx.createRadialGradient(-4, -4, 2, 0, 0, h * 1.2);
+  g.addColorStop(0, colors.light);
+  g.addColorStop(0.5, colors.main);
+  g.addColorStop(1, colors.dark);
+  ctx.fillStyle = g;
+  roundRect(ctx, -h, -h, INNER, INNER, 6);
   ctx.fill();
 
-  // Gold border (indestructible indicator)
   ctx.strokeStyle = '#daa520';
   ctx.lineWidth = 2.5;
   ctx.shadowColor = 'rgba(218,165,32,0.5)';
   ctx.shadowBlur = 6;
-  roundRect(ctx, left, top, INNER, INNER, 6);
+  roundRect(ctx, -h, -h, INNER, INNER, 6);
   ctx.stroke();
   ctx.shadowBlur = 0;
 
-  // Inner highlight
   ctx.strokeStyle = 'rgba(255,215,0,0.2)';
   ctx.lineWidth = 1;
-  roundRect(ctx, left + 2, top + 2, INNER - 4, INNER - 4, 4);
+  roundRect(ctx, -h + 2, -h + 2, INNER - 4, INNER - 4, 4);
   ctx.stroke();
 
-  // Double mirror line with glow
+  // Mirror line ╲ at deg=0
   ctx.strokeStyle = '#ffffff';
   ctx.lineWidth = 2.5;
   ctx.shadowColor = '#c0e0ff';
   ctx.shadowBlur = 8;
   ctx.beginPath();
-  if (scarabSlash) {
-    ctx.moveTo(r, t); ctx.lineTo(l, b);
-  } else {
-    ctx.moveTo(l, t); ctx.lineTo(r, b);
-  }
+  ctx.moveTo(-h, -h);
+  ctx.lineTo(h, h);
   ctx.stroke();
   ctx.shadowBlur = 0;
 
-  // Star symbol
   ctx.fillStyle = COLORS.crown;
   ctx.shadowColor = 'rgba(255,230,109,0.5)';
   ctx.shadowBlur = 4;
   ctx.font = 'bold 13px Arial';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillText('★', cx, cy);
+  ctx.fillText('★', 0, 0);
   ctx.shadowBlur = 0;
 }
 
-// === ANUBIS ===
-function drawAnubis(ctx: CanvasRenderingContext2D, left: number, top: number, cx: number, cy: number, piece: Piece) {
-  drawPieceBase(ctx, left, top, cx, cy, piece);
+// === ANUBIS (deg=0: shield on top/North) ===
+function drawAnubis(ctx: CanvasRenderingContext2D, piece: Piece) {
+  drawPieceBase(ctx, piece);
+  const h = HALF;
 
-  // Shield with metallic gradient
+  // Shield bar on top edge at deg=0
   const shieldT = 7;
-  let sx: number, sy: number, sw: number, sh: number;
-  let isHorizontal: boolean;
-  if (piece.deg === 0) {
-    sx = left + 3; sy = top; sw = INNER - 6; sh = shieldT; isHorizontal = true;
-  } else if (piece.deg === 180) {
-    sx = left + 3; sy = top + INNER - shieldT; sw = INNER - 6; sh = shieldT; isHorizontal = true;
-  } else if (piece.deg === 90) {
-    sx = left + INNER - shieldT; sy = top + 3; sw = shieldT; sh = INNER - 6; isHorizontal = false;
-  } else {
-    sx = left; sy = top + 3; sw = shieldT; sh = INNER - 6; isHorizontal = false;
-  }
-
-  const shieldGrad = isHorizontal
-    ? ctx.createLinearGradient(sx, sy, sx, sy + sh)
-    : ctx.createLinearGradient(sx, sy, sx + sw, sy);
+  const shieldGrad = ctx.createLinearGradient(0, -h, 0, -h + shieldT);
   shieldGrad.addColorStop(0, '#eee');
   shieldGrad.addColorStop(0.3, '#fff');
   shieldGrad.addColorStop(0.5, '#ccc');
@@ -305,17 +259,16 @@ function drawAnubis(ctx: CanvasRenderingContext2D, left: number, top: number, cx
   ctx.fillStyle = shieldGrad;
   ctx.shadowColor = 'rgba(255,255,255,0.3)';
   ctx.shadowBlur = 4;
-  ctx.fillRect(sx, sy, sw, sh);
+  ctx.fillRect(-h + 3, -h, INNER - 6, shieldT);
   ctx.shadowBlur = 0;
 
-  // Letter with subtle shadow
   ctx.fillStyle = '#0a1020';
   ctx.shadowColor = 'rgba(0,0,0,0.3)';
   ctx.shadowBlur = 2;
   ctx.font = 'bold 15px Arial';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillText('A', cx, cy);
+  ctx.fillText('A', 0, 0);
   ctx.shadowBlur = 0;
 }
 

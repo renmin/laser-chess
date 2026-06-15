@@ -28,7 +28,7 @@ function laserTestSetup(targetType: Piece['type'], targetDeg: OrientationDeg, la
 }
 
 describe('Pyramid reflection', () => {
-  // deg 0: reflects S→E, W→N. Destroys N, E.
+  // deg 0: ╲ SW bright. Reflects S→E, W→N. Destroys N, E.
   describe('deg 0', () => {
     it('N → destroy', () => {
       const result = calculateLaser(laserTestSetup('pyramid', 0, 'N'), 'red');
@@ -50,29 +50,30 @@ describe('Pyramid reflection', () => {
     });
   });
 
-  // deg 90: reflects S→W, E→N. Destroys N, W.
+  // deg 90: ╱ NW bright (physical 90° CW rotation of deg 0).
+  // Reflects N→E, W→S. Destroys S, E.
   describe('deg 90', () => {
-    it('N → destroy', () => {
+    it('N → reflect E', () => {
       const result = calculateLaser(laserTestSetup('pyramid', 90, 'N'), 'red');
-      expect(result.destroyedPieceIds).toContain('target');
+      expect(result.destroyedPieceIds).toHaveLength(0);
+      expect(result.segments.at(-1)!.to.col).toBeGreaterThan(5);
     });
-    it('S → reflect W', () => {
+    it('S → destroy', () => {
       const result = calculateLaser(laserTestSetup('pyramid', 90, 'S'), 'red');
-      expect(result.destroyedPieceIds).toHaveLength(0);
-      expect(result.segments.at(-1)!.to.col).toBeLessThan(5);
-    });
-    it('E → reflect N', () => {
-      const result = calculateLaser(laserTestSetup('pyramid', 90, 'E'), 'red');
-      expect(result.destroyedPieceIds).toHaveLength(0);
-      expect(result.segments.at(-1)!.to.row).toBeGreaterThan(4);
-    });
-    it('W → destroy', () => {
-      const result = calculateLaser(laserTestSetup('pyramid', 90, 'W'), 'red');
       expect(result.destroyedPieceIds).toContain('target');
+    });
+    it('E → destroy', () => {
+      const result = calculateLaser(laserTestSetup('pyramid', 90, 'E'), 'red');
+      expect(result.destroyedPieceIds).toContain('target');
+    });
+    it('W → reflect S', () => {
+      const result = calculateLaser(laserTestSetup('pyramid', 90, 'W'), 'red');
+      expect(result.destroyedPieceIds).toHaveLength(0);
+      expect(result.segments.at(-1)!.to.row).toBeLessThan(4);
     });
   });
 
-  // deg 180: reflects N→W, E→S. Destroys S, W.
+  // deg 180: ╲ NE bright. Reflects N→W, E→S. Destroys S, W.
   describe('deg 180', () => {
     it('N → reflect W', () => {
       const result = calculateLaser(laserTestSetup('pyramid', 180, 'N'), 'red');
@@ -94,41 +95,34 @@ describe('Pyramid reflection', () => {
     });
   });
 
-  // deg 270: reflects N→E, W→S. Destroys S, E.
+  // deg 270: ╱ SE bright (physical 270° CW = 90° CCW rotation of deg 0).
+  // Reflects S→W, E→N. Destroys N, W.
   describe('deg 270', () => {
-    it('N → reflect E', () => {
+    it('N → destroy', () => {
       const result = calculateLaser(laserTestSetup('pyramid', 270, 'N'), 'red');
-      expect(result.destroyedPieceIds).toHaveLength(0);
-      expect(result.segments.at(-1)!.to.col).toBeGreaterThan(5);
+      expect(result.destroyedPieceIds).toContain('target');
     });
-    it('S → destroy', () => {
+    it('S → reflect W', () => {
       const result = calculateLaser(laserTestSetup('pyramid', 270, 'S'), 'red');
-      expect(result.destroyedPieceIds).toContain('target');
-    });
-    it('E → destroy', () => {
-      const result = calculateLaser(laserTestSetup('pyramid', 270, 'E'), 'red');
-      expect(result.destroyedPieceIds).toContain('target');
-    });
-    it('W → reflect S', () => {
-      const result = calculateLaser(laserTestSetup('pyramid', 270, 'W'), 'red');
       expect(result.destroyedPieceIds).toHaveLength(0);
-      expect(result.segments.at(-1)!.to.row).toBeLessThan(4);
+      expect(result.segments.at(-1)!.to.col).toBeLessThan(5);
+    });
+    it('E → reflect N', () => {
+      const result = calculateLaser(laserTestSetup('pyramid', 270, 'E'), 'red');
+      expect(result.destroyedPieceIds).toHaveLength(0);
+      expect(result.segments.at(-1)!.to.row).toBeGreaterThan(4);
+    });
+    it('W → destroy', () => {
+      const result = calculateLaser(laserTestSetup('pyramid', 270, 'W'), 'red');
+      expect(result.destroyedPieceIds).toContain('target');
     });
   });
 });
 
 describe('Scarab reflection', () => {
-  // deg 0/180 (╲): N↔W, E↔S — always reflects, never destroyed
   it.each([
     [0, 'N'], [0, 'W'], [0, 'E'], [0, 'S'],
     [180, 'N'], [180, 'W'], [180, 'E'], [180, 'S'],
-  ] as [OrientationDeg, Direction][])('deg %d from %s → reflects', (deg, dir) => {
-    const result = calculateLaser(laserTestSetup('scarab', deg, dir), 'red');
-    expect(result.destroyedPieceIds).toHaveLength(0);
-  });
-
-  // deg 90/270 (╱): N↔E, S↔W
-  it.each([
     [90, 'N'], [90, 'E'], [90, 'S'], [90, 'W'],
   ] as [OrientationDeg, Direction][])('deg %d from %s → reflects', (deg, dir) => {
     const result = calculateLaser(laserTestSetup('scarab', deg, dir), 'red');
@@ -137,8 +131,6 @@ describe('Scarab reflection', () => {
 });
 
 describe('Anubis', () => {
-  // deg 0 = shield N. Shield blocks beam traveling S (hits the N face).
-  // Beams traveling N/E/W hit non-shield faces → destroy.
   it('deg 0: S → block (hits shield)', () => {
     const result = calculateLaser(laserTestSetup('anubis', 0, 'S'), 'red');
     expect(result.destroyedPieceIds).toHaveLength(0);
@@ -147,16 +139,6 @@ describe('Anubis', () => {
     const result = calculateLaser(laserTestSetup('anubis', 0, 'N'), 'red');
     expect(result.destroyedPieceIds).toContain('target');
   });
-  it('deg 0: E → destroy', () => {
-    const result = calculateLaser(laserTestSetup('anubis', 0, 'E'), 'red');
-    expect(result.destroyedPieceIds).toContain('target');
-  });
-  it('deg 0: W → destroy', () => {
-    const result = calculateLaser(laserTestSetup('anubis', 0, 'W'), 'red');
-    expect(result.destroyedPieceIds).toContain('target');
-  });
-
-  // deg 180 = shield S. Blocks beam traveling N (hits the S face).
   it('deg 180: N → block', () => {
     const result = calculateLaser(laserTestSetup('anubis', 180, 'N'), 'red');
     expect(result.destroyedPieceIds).toHaveLength(0);
