@@ -85,9 +85,7 @@ export function LayoutEditor() {
       pieces: prev.pieces.map(p => {
         if (p.id !== selectedPieceId) return p;
         if (p.type === 'king') return p;
-        // Pyramid/Scarab: visual CW = deg-90; Sphinx/Anubis: visual CW = deg+90
-        const step = (p.type === 'pyramid' || p.type === 'scarab') ? -90 : 90;
-        return { ...p, deg: (((p.deg + step) % 360 + 360) % 360) as OrientationDeg };
+        return { ...p, deg: ((p.deg + 90) % 360) as OrientationDeg };
       }),
     }));
   }
