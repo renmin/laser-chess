@@ -58,9 +58,8 @@ export function getSwapTargets(board: Board, piece: Piece): Piece[] {
 
 export function rotatePiece(piece: Piece, direction: 'cw' | 'ccw'): void {
   if (piece.type === 'king') return;
-  // Unified for all piece types:
-  //   Rotate Left button passes 'ccw' → +90 (counterclockwise = math positive)
-  //   Rotate Right button passes 'cw' → -90 (clockwise)
-  const step = direction === 'ccw' ? 90 : -90;
+  //   Rotate Right button passes 'cw'  → +90 (clockwise on screen)
+  //   Rotate Left  button passes 'ccw' → -90 (counterclockwise)
+  const step = direction === 'cw' ? 90 : -90;
   piece.deg = (((piece.deg + step) % 360 + 360) % 360) as OrientationDeg;
 }
