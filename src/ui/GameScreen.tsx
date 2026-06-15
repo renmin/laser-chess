@@ -146,8 +146,8 @@ export function GameScreen({ onBackToMenu, aiConfig }: Props) {
         // Sphinx/Anubis: cw button = deg-90 = visual CCW on screen = canvas -PI/2
         angle = action.direction === 'cw' ? -Math.PI / 2 : Math.PI / 2;
       } else {
-        // Pyramid/Scarab: ccw button = visual CW on screen = canvas +PI/2
-        angle = action.direction === 'ccw' ? Math.PI / 2 : -Math.PI / 2;
+        // Pyramid/Scarab
+        angle = action.direction === 'ccw' ? -Math.PI / 2 : Math.PI / 2;
       }
       startMoveAnim({
         pieceId: action.pieceId, type: 'rotate',
