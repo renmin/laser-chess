@@ -189,19 +189,13 @@ function drawPyramid(ctx: CanvasRenderingContext2D, left: number, top: number, _
 
   drawPieceShadow(ctx, left, top);
 
-  // Dark (vulnerable) side
-  ctx.fillStyle = '#0d1525';
-  ctx.globalAlpha = 0.75;
+  // Dark (vulnerable) side — nearly invisible
+  ctx.fillStyle = '#040810';
   fillTriangle(ctx, emptyTri);
-  ctx.globalAlpha = 1;
 
-  // Bright (reflective) side with gradient
-  const mirrorGrad = ctx.createLinearGradient(l, t, r, b);
-  mirrorGrad.addColorStop(0, colors.mirror);
-  mirrorGrad.addColorStop(0.5, colors.light);
-  mirrorGrad.addColorStop(1, colors.main);
-  ctx.fillStyle = mirrorGrad;
-  ctx.globalAlpha = 0.6;
+  // Bright (reflective) side — vivid owner color
+  ctx.fillStyle = colors.light;
+  ctx.globalAlpha = 0.85;
   fillTriangle(ctx, solidTri);
   ctx.globalAlpha = 1;
 
