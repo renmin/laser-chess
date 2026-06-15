@@ -58,8 +58,16 @@ export function getSwapTargets(board: Board, piece: Piece): Piece[] {
 
 export function rotatePiece(piece: Piece, direction: 'cw' | 'ccw'): void {
   if (piece.type === 'king') return;
-  //   Rotate Right button passes 'cw'  → +90 (clockwise on screen)
-  //   Rotate Left  button passes 'ccw' → -90 (counterclockwise)
+
+  if (piece.type === 'pyramid' || piece.type === 'scarab') {
+    // Pyramid/Scarab: deg→visual mapping is inverted
+    // cw (Right, visual CW) needs deg-90, ccw (Left, visual CCW) needs deg+90
+    const step = direction === 'cw' ? -90 : 90;
+    piece.deg = (((piece.deg + step) % 360 + 360) % 360) as OrientationDeg;
+    return;
+  }
+
+  // Sphinx/Anubis: cw (Right, visual CW) = deg+90
   const step = direction === 'cw' ? 90 : -90;
   piece.deg = (((piece.deg + step) % 360 + 360) % 360) as OrientationDeg;
 }
