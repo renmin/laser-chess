@@ -140,7 +140,15 @@ export function GameScreen({ onBackToMenu, aiConfig }: Props) {
       });
     } else if (action.type === 'rotate') {
       SoundManager.pieceRotate();
-      const angle = action.direction === 'ccw' ? -Math.PI / 2 : Math.PI / 2;
+      const piece_ = gameStateRef.current.board.pieces.find(p => p.id === action.pieceId);
+      let angle: number;
+      if (piece_ && (piece_.type === 'sphinx' || piece_.type === 'anubis')) {
+        // Sphinx/Anubis: cw button = deg-90 = visual CCW on screen = canvas -PI/2
+        angle = action.direction === 'cw' ? -Math.PI / 2 : Math.PI / 2;
+      } else {
+        // Pyramid/Scarab: ccw button = visual CW on screen = canvas +PI/2
+        angle = action.direction === 'ccw' ? Math.PI / 2 : -Math.PI / 2;
+      }
       startMoveAnim({
         pieceId: action.pieceId, type: 'rotate',
         fromX: 0, fromY: 0, toX: 0, toY: 0,
@@ -215,6 +223,7 @@ export function GameScreen({ onBackToMenu, aiConfig }: Props) {
 
     if (result.laser.segments.length === 0) {
       displayBoardRef.current = null;
+      gameStateRef.current = result.state;
       setGameState(result.state);
       phaseRef.current = 'idle';
       SoundManager.turnChange();
@@ -250,6 +259,7 @@ export function GameScreen({ onBackToMenu, aiConfig }: Props) {
       if (!piecesRemoved && elapsed >= beamTime && result.destroyedPieces.length > 0) {
         piecesRemoved = true;
         displayBoardRef.current = null;
+        gameStateRef.current = result.state;
         setGameState(result.state);
 
         for (const dp of result.destroyedPieces) {
@@ -271,6 +281,7 @@ export function GameScreen({ onBackToMenu, aiConfig }: Props) {
         clearExplosions();
 
         if (!piecesRemoved) {
+          gameStateRef.current = result.state;
           setGameState(result.state);
         }
 
@@ -292,6 +303,7 @@ export function GameScreen({ onBackToMenu, aiConfig }: Props) {
 
   function finishTurn(result: MoveResult) {
     displayBoardRef.current = null;
+    gameStateRef.current = result.state;
     setGameState(result.state);
     phaseRef.current = 'idle';
     SoundManager.turnChange();
