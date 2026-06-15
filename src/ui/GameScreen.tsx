@@ -143,8 +143,7 @@ export function GameScreen({ onBackToMenu, aiConfig }: Props) {
       const piece_ = gameStateRef.current.board.pieces.find(p => p.id === action.pieceId);
       let angle: number;
       if (piece_ && (piece_.type === 'sphinx' || piece_.type === 'anubis')) {
-        // Sphinx/Anubis: cw button = deg-90 = visual CCW on screen = canvas -PI/2
-        angle = action.direction === 'cw' ? -Math.PI / 2 : Math.PI / 2;
+        angle = action.direction === 'cw' ? Math.PI / 2 : -Math.PI / 2;
       } else {
         // Pyramid/Scarab
         angle = action.direction === 'ccw' ? -Math.PI / 2 : Math.PI / 2;
