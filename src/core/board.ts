@@ -17,10 +17,8 @@ export function createEmptyBoard(): Board {
 }
 
 function getCellRestriction(col: number, row: number): Player | null {
-  if (col === 0 && (row === 0 || row === 1)) return 'red';
-  if (col === 0 && (row === 6 || row === 7)) return 'blue';
-  if (col === 9 && (row === 0 || row === 1)) return 'red';
-  if (col === 9 && (row === 6 || row === 7)) return 'blue';
+  if (col === 0) return 'blue';
+  if (col === 9) return 'red';
   return null;
 }
 
