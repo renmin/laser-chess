@@ -357,7 +357,6 @@ export function GameScreen({ onBackToMenu, aiConfig }: Props) {
   }
 
   function handleNewGame() {
-    cancelAnimationFrame(rafRef.current);
     moveAnimRef.current = null;
     laserAnimRef.current = null;
     pendingResultRef.current = null;
@@ -370,7 +369,6 @@ export function GameScreen({ onBackToMenu, aiConfig }: Props) {
     gameStateRef.current = newState;
     setSelectedPiece(null);
     setShowWinner(false);
-    // scheduleAI will be called by the idle render loop if needed
   }
 
   useEffect(() => {
