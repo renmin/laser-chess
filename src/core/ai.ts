@@ -145,12 +145,17 @@ export function findBestMove(state: GameState, depth: number): MoveAction | null
   let bestMove: MoveAction = candidates[0].m;
   let bestScore = -Infinity;
 
+  // Easy mode: add noise to evaluation, making decisions imperfect
+  const noise = depth === 1 ? 80 : 0;
+
   for (const { m: move } of candidates) {
     if (performance.now() > deadline) break;
     const result = executeMove(state, move);
     if (!result) continue;
 
-    const score = minimax(result.state, depth - 1, bestScore, Infinity, aiPlayer, deadline);
+    let score = minimax(result.state, depth - 1, bestScore, Infinity, aiPlayer, deadline);
+    if (noise > 0) score += (Math.random() - 0.5) * noise;
+
     if (score > bestScore) {
       bestScore = score;
       bestMove = move;
